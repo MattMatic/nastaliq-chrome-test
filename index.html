@@ -1,0 +1,133 @@
+<html lang="ur-PK">
+<head>
+<style>
+  body {
+    font-family: "Calibri";
+    background-color: #aacccc;
+  }
+.test_1 {
+  font-family: "Test_Font_1";
+  font-kerning: normal;
+  font-size: 200%;
+  color: #000080;
+}
+.block {
+  display: block;
+  width: 100%;
+  /* border: none; */
+  background-color: #04AA6D;
+  padding: 8px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+
+<h1>Urdu Test</h1>
+2025-02-12 Test for Chrome/Android freezing when loading Noto Nastaliq Urdu into the rendering pipeline.
+
+
+<script>
+// https://stackoverflow.com/a/22707551
+const later = (delay, value) => {
+    let timer = 0;
+    let reject = null;
+    const promise = new Promise((resolve, _reject) => {
+        reject = _reject;
+        timer = setTimeout(resolve, delay, value);
+    });
+    return {
+        get promise() { return promise; },
+        cancel() {
+            if (timer) {
+                clearTimeout(timer);
+                timer = 0;
+                reject();
+                reject = null;
+            }
+        }
+    };
+};
+
+// https://stackoverflow.com/a/55627399
+function loadFontNow(url) {
+  fetch(url)
+    .then(resp => resp.arrayBuffer())
+    .then(font => {
+      const fontFace = new FontFace('Test_Font_1', font);
+      document.fonts.add(fontFace);
+      Heading2.innerText = url;
+    });
+}
+
+function loadFont(url) {
+  Heading2.innerText = url + ' (loading)';
+  const l1 = later(100, "load");
+  l1.promise
+    .then(msg => { loadFontNow(url); });
+}
+
+function unloadFonts() {
+  document.fonts.clear();
+  Heading2.innerText = 'Default';
+}
+
+</script>
+
+<h1>Tests</h1>
+<table width='100%' border=0>
+  <tr>
+    <th>1</th>
+    <td><button class='block' onclick='loadFont("NotoNastaliqUrdu-Regular-v4.000.ttf");'>Noto v4.000</button></td>
+    <td>ok</td>
+  </tr>
+  <tr>
+    <th>2</th>
+    <td><button class='block' onclick='loadFont("Gulzar-Regular-1.002.ttf");'>Gulzar 1.002</button></td>
+    <td>ok. hopefully</td>
+  </tr>
+  <tr>
+    <th>3</th>
+    <td><button class='block' onclick='loadFont("NotoNastaliqUrdu-Regular-v3.007.ttf");'>Noto v3.007</button></td>
+    <td>freeze expected</td>
+  </tr>
+  <tr>
+    <th>4</th>
+    <td><button class='block' onclick='loadFont("TitanOne-Regular.ttf");'>TitanOne</button></td>
+    <td>checking Latin vs Nastaliq fallback</td>
+  </tr>
+
+  <tr>
+    <th><hr></th>
+    <td><hr></td>
+    <td><hr></td>
+  </tr>
+  <tr>
+    <th>0</th>
+    <td><button class='block' onclick='unloadFonts();'>Clear Fonts</button></td>
+    <td>back to default font</td>
+  </tr>
+</table>
+
+<h2>Font: <span id='Heading2'>Default</span></h2>
+<span class='test_1'>
+<table width='100%' border=1>
+  <tr style='height:10em;vertical-align: center; text-align: center;'>
+    <td width='50%' class='test_1'>Test</td>
+    <td width='50%' class='test_1'>ٹیسٹ اور آزمائش</td>
+  </tr>
+</table>
+</span>
+
+
+<h3>User Agent</h3>
+<font size=-1><span id='UserAgent'></span></font>
+
+<script>
+UserAgent.innerText = navigator.userAgent;
+</script>
+
+</body>
+</html>
