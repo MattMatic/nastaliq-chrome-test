@@ -48,5 +48,6 @@ Your only action will be to close the tab.
 	- FREEZE: Google ChromeOS version 132.0.6834.190 (official build 64bit)
 - Ubuntu Desktop 24.10 (under VirtualBox)
 	- FREEZE: **Chromium** 133.0.6943.35 (Official Build) snap (64-bit)
+	- FREEZE: **Chromium** 133.0.6943.53 (Official Build) snap (64-bit) - release candidate
 	- DELAY: Firefox - v3.007 is a few hundred milliseconds slower at loading.
 
